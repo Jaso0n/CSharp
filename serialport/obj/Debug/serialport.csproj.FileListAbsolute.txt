@@ -1,0 +1,10 @@
+C:\Users\Jason\source\repos\serialport\bin\Debug\serialport.exe.config
+C:\Users\Jason\source\repos\serialport\bin\Debug\serialport.exe
+C:\Users\Jason\source\repos\serialport\bin\Debug\serialport.pdb
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.csprojAssemblyReference.cache
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.Form1.resources
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.Properties.Resources.resources
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.csproj.GenerateResource.cache
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.csproj.CoreCompileInputs.cache
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.exe
+C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.pdb
