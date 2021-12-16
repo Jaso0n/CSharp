@@ -22,24 +22,25 @@ namespace serialport
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string[] baud = { "300","600","1200","2400","4800","9600","19200","38400",
-                "43000", "56000", "57600","115200", "128000", "230400", "256000", "460800" };
+            string[] baud = {"9600","19200","38400","56000","57600","115200",
+                             "128000", "230400", "256000", "460800","500000",};
             comboBox2.Items.AddRange(baud);
             comboBox1.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
             //串口默认设置
             comboBox1.Text = "COM1";
-            comboBox2.Text = "9600";
+            comboBox2.Text = "115200";
             comboBox3.Text = "8";
             comboBox4.Text = "None";
             comboBox5.Text = "1";
             button1.BackColor = Color.ForestGreen;
-
+            button2.BackColor = Color.ForestGreen;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
-            //串口初始化
+        private void Button1_Click(object sender, EventArgs e)//打开串口
+        //串口初始化
         {
-            try {
+            try
+            {
                 if (serialPort1.IsOpen)
                 {
                     serialPort1.Close();
@@ -108,7 +109,7 @@ namespace serialport
                 if (serialPort1.IsOpen & checkBox3.Checked)
                 {
                     //16进制发送
-                    string rds = textBox2.Text.Replace(" ","");//去除输入的空格
+                    string rds = textBox2.Text.Replace(" ", "");//去除输入的空格
                     num = (rds.Length - rds.Length % 2) / 2;
                     if (rds.Length % 2 == 0)
                     //判断用户输入是否为偶数
@@ -123,24 +124,24 @@ namespace serialport
                     {
                         int k = num + 1;
                         ReadyToSend = new byte[k];
-                        for (int i = 0; i < k -1; i++)
+                        for (int i = 0; i < k - 1; i++)
                         {
                             ReadyToSend[i] = Convert.ToByte(rds.Substring(i * 2, 2), 16);
                         }
-                        ReadyToSend[k-1] = Convert.ToByte(rds.Substring(rds.Length - 1, 1), 16);
+                        ReadyToSend[k - 1] = Convert.ToByte(rds.Substring(rds.Length - 1, 1), 16);
                     }
                     //新行发送
                     if (checkBox1.Checked)
                     {
                         byte[] changeLine = { 0x0d, 0x0a };
-                        RTS = ReadyToSend.Concat(changeLine).ToArray(); 
+                        RTS = ReadyToSend.Concat(changeLine).ToArray();
                         serialPort1.Write(RTS, 0, RTS.Length);
                         SDNumb += RTS.Length;
                     }
                     else
                     {
                         RTS = ReadyToSend;
-                        serialPort1.Write(RTS, 0,RTS.Length );
+                        serialPort1.Write(RTS, 0, RTS.Length);
                         SDNumb += RTS.Length;
                     }
                 }
@@ -187,7 +188,7 @@ namespace serialport
             byte[] RecvBuff = new byte[RecvNum];
             serialPort1.Read(RecvBuff, 0, RecvNum);
             RENumb += RecvNum;
-            label9.Text = "RX:" +RENumb.ToString() + "Bytes";
+            label9.Text = "RX:" + RENumb.ToString() + "Bytes";
             try
             {
                 this.Invoke(new EventHandler(delegate
@@ -197,7 +198,7 @@ namespace serialport
                      //16 进制显示
                      foreach (byte b in RecvBuff)
                      {
-                         textBox1.AppendText(b.ToString("X2")+' ');
+                         textBox1.AppendText(b.ToString("X2") + ' ');
                      }
 
                  }
@@ -214,7 +215,7 @@ namespace serialport
         }
 
         private void Button3_Click(object sender, EventArgs e)
-            //清除接受缓冲区
+        //清除接受缓冲区
         {
             textBox1.Text = null;
             RENumb = 0;
@@ -276,9 +277,20 @@ namespace serialport
             label8.Text = "TX:0Bytes";
         }
 
-        private void TextBox3_TextChanged(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
-        
+            new Form2().ShowDialog();
         }
+
+        private void Label10_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Jaso0n/CSharp");
+        }
+
+        private void CheckBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            this.button6.Enabled = checkBox6.Checked;
+        }
+
     }
 }

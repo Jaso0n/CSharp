@@ -8,3 +8,15 @@ C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.csproj.GenerateResou
 C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.csproj.CoreCompileInputs.cache
 C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.exe
 C:\Users\Jason\source\repos\serialport\obj\Debug\serialport.pdb
+C:\Users\24782\Desktop\CSharp\serialport\bin\Debug\serialport.exe.config
+C:\Users\24782\Desktop\CSharp\serialport\bin\Debug\serialport.exe
+C:\Users\24782\Desktop\CSharp\serialport\bin\Debug\serialport.pdb
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.csproj.SuggestedBindingRedirects.cache
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.Form1.resources
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.Form2.resources
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.Properties.Resources.resources
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.csproj.GenerateResource.cache
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.csproj.CoreCompileInputs.cache
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.exe
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.pdb
+C:\Users\24782\Desktop\CSharp\serialport\obj\Debug\serialport.csproj.AssemblyReference.cache
