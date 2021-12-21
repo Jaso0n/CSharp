@@ -27,6 +27,7 @@ namespace serialport
         private static string[] EEPvalue = new string[45];
 
         private static int[] EEPcombobox = new int[60];
+                                                                                                                                        
 
         /****************************************************************************************************************
          * CRC Calculation Begin
@@ -487,19 +488,17 @@ namespace serialport
         }
         private void EEPM6_CB_Change(object sender, EventArgs e)
         {
-            byte temp;
-            int bit0, bit1, bit2, bit3, bit4, bit6;
-            temp = Convert.ToByte(this.comboBox39.Text);
+            int bit0_3, bit4, bit6;
 
-            bit0 = (temp & 1) == 1 ? 1 : 0;
-            bit1 = (temp & 2) == 2 ? 1 : 0;
-            bit2 = (temp & 4) == 4 ? 1 : 0;
-            bit3 = (temp & 8) == 8 ? 1 : 0;
+            if(this.comboBox39.SelectedIndex == -1)
+                bit0_3 = 0;
+            else
+                bit0_3 = this.comboBox39.SelectedIndex;
 
             bit4 = this.comboBox38.Text == "Enable" ? 1 : 0;
             bit6 = this.comboBox37.Text == "4.4" ? 1 : 0;
 
-            this.value31.Value = bit6 << 6 | bit4 << 4 | bit3 << 3 | bit2 << 2 | bit1 << 1 | bit0;
+            this.value31.Value = bit6 << 6 | bit4 << 4 | bit0_3;
         }
 
         private void EEPM6_Change_CB()
@@ -507,7 +506,7 @@ namespace serialport
             byte temp;
             temp = Convert.ToByte(this.value31.Value);
 
-            this.comboBox37.SelectedIndex = (temp & 64) == 64 ? 0 : 1;
+            this.comboBox37.SelectedIndex = (temp & 64) == 64 ? 1 : 0;
             this.comboBox38.SelectedIndex = (temp & 16) == 16 ? 0 : 1;
             this.comboBox39.SelectedIndex = (temp & 15);
         }
