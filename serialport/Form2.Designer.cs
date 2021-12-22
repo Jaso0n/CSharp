@@ -524,6 +524,7 @@ namespace serialport
             this.I_Full.ReadOnly = true;
             this.I_Full.Size = new System.Drawing.Size(87, 21);
             this.I_Full.TabIndex = 386;
+            this.I_Full.TextChanged += new System.EventHandler(this.RREF_Change);
             // 
             // label115
             // 
@@ -563,6 +564,7 @@ namespace serialport
             this.comboBox54.Name = "comboBox54";
             this.comboBox54.Size = new System.Drawing.Size(84, 20);
             this.comboBox54.TabIndex = 382;
+            this.comboBox54.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label110
             // 
@@ -584,6 +586,7 @@ namespace serialport
             this.comboBox55.Name = "comboBox55";
             this.comboBox55.Size = new System.Drawing.Size(84, 20);
             this.comboBox55.TabIndex = 380;
+            this.comboBox55.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label111
             // 
@@ -605,6 +608,7 @@ namespace serialport
             this.comboBox56.Name = "comboBox56";
             this.comboBox56.Size = new System.Drawing.Size(84, 20);
             this.comboBox56.TabIndex = 378;
+            this.comboBox56.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label112
             // 
@@ -626,6 +630,7 @@ namespace serialport
             this.comboBox57.Name = "comboBox57";
             this.comboBox57.Size = new System.Drawing.Size(84, 20);
             this.comboBox57.TabIndex = 376;
+            this.comboBox57.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label113
             // 
@@ -647,6 +652,7 @@ namespace serialport
             this.comboBox50.Name = "comboBox50";
             this.comboBox50.Size = new System.Drawing.Size(84, 20);
             this.comboBox50.TabIndex = 374;
+            this.comboBox50.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label106
             // 
@@ -668,6 +674,7 @@ namespace serialport
             this.comboBox51.Name = "comboBox51";
             this.comboBox51.Size = new System.Drawing.Size(84, 20);
             this.comboBox51.TabIndex = 372;
+            this.comboBox51.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label107
             // 
@@ -689,6 +696,7 @@ namespace serialport
             this.comboBox52.Name = "comboBox52";
             this.comboBox52.Size = new System.Drawing.Size(84, 20);
             this.comboBox52.TabIndex = 370;
+            this.comboBox52.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label108
             // 
@@ -710,6 +718,7 @@ namespace serialport
             this.comboBox53.Name = "comboBox53";
             this.comboBox53.Size = new System.Drawing.Size(84, 20);
             this.comboBox53.TabIndex = 368;
+            this.comboBox53.TextChanged += new System.EventHandler(this.EEPM11_CB_Change);
             // 
             // label109
             // 
@@ -745,11 +754,17 @@ namespace serialport
             "500us",
             "200us",
             "100us",
+            "50us",
+            "50us",
+            "50us",
+            "50us",
+            "50us",
             "50us"});
             this.comboBox49.Location = new System.Drawing.Point(598, 481);
             this.comboBox49.Name = "comboBox49";
             this.comboBox49.Size = new System.Drawing.Size(84, 20);
             this.comboBox49.TabIndex = 365;
+            this.comboBox49.TextChanged += new System.EventHandler(this.EEPM10_CB_Change);
             // 
             // label104
             // 
@@ -777,11 +792,15 @@ namespace serialport
             "100ms",
             "200ms",
             "500ms",
+            "Direct to FS",
+            "Direct to FS",
+            "Direct to FS",
             "Direct to FS"});
             this.comboBox48.Location = new System.Drawing.Point(457, 585);
             this.comboBox48.Name = "comboBox48";
             this.comboBox48.Size = new System.Drawing.Size(84, 20);
             this.comboBox48.TabIndex = 363;
+            this.comboBox48.TextChanged += new System.EventHandler(this.EEPM10_CB_Change);
             // 
             // label103
             // 
@@ -817,6 +836,7 @@ namespace serialport
             this.comboBox47.Name = "comboBox47";
             this.comboBox47.Size = new System.Drawing.Size(84, 20);
             this.comboBox47.TabIndex = 361;
+            this.comboBox47.TextChanged += new System.EventHandler(this.EEPM9_CB_Change);
             // 
             // label102
             // 
@@ -852,6 +872,7 @@ namespace serialport
             this.comboBox46.Name = "comboBox46";
             this.comboBox46.Size = new System.Drawing.Size(84, 20);
             this.comboBox46.TabIndex = 359;
+            this.comboBox46.TextChanged += new System.EventHandler(this.EEPM9_CB_Change);
             // 
             // label101
             // 
@@ -887,6 +908,7 @@ namespace serialport
             this.comboBox45.Name = "comboBox45";
             this.comboBox45.Size = new System.Drawing.Size(84, 20);
             this.comboBox45.TabIndex = 357;
+            this.comboBox45.TextChanged += new System.EventHandler(this.EEPM8_CB_Change);
             // 
             // label100
             // 
@@ -914,6 +936,7 @@ namespace serialport
             this.comboBox44.Name = "comboBox44";
             this.comboBox44.Size = new System.Drawing.Size(84, 20);
             this.comboBox44.TabIndex = 355;
+            this.comboBox44.TextChanged += new System.EventHandler(this.EEPM8_CB_Change);
             // 
             // label99
             // 
@@ -937,6 +960,7 @@ namespace serialport
             this.comboBox43.Name = "comboBox43";
             this.comboBox43.Size = new System.Drawing.Size(84, 20);
             this.comboBox43.TabIndex = 353;
+            this.comboBox43.TextChanged += new System.EventHandler(this.EEPM7_CB_Change);
             // 
             // label98
             // 
@@ -958,6 +982,7 @@ namespace serialport
             this.comboBox42.Name = "comboBox42";
             this.comboBox42.Size = new System.Drawing.Size(84, 20);
             this.comboBox42.TabIndex = 351;
+            this.comboBox42.TextChanged += new System.EventHandler(this.EEPM7_CB_Change);
             // 
             // label97
             // 
@@ -979,6 +1004,7 @@ namespace serialport
             this.comboBox41.Name = "comboBox41";
             this.comboBox41.Size = new System.Drawing.Size(84, 20);
             this.comboBox41.TabIndex = 349;
+            this.comboBox41.TextChanged += new System.EventHandler(this.EEPM7_CB_Change);
             // 
             // label96
             // 
@@ -1003,6 +1029,7 @@ namespace serialport
             "600",
             "800",
             "1000",
+            "1200",
             "2000",
             "4000",
             "5900",
@@ -1013,6 +1040,7 @@ namespace serialport
             this.comboBox40.Name = "comboBox40";
             this.comboBox40.Size = new System.Drawing.Size(84, 20);
             this.comboBox40.TabIndex = 347;
+            this.comboBox40.TextChanged += new System.EventHandler(this.EEPM7_CB_Change);
             // 
             // label95
             // 
@@ -2046,6 +2074,7 @@ namespace serialport
             this.value32.Name = "value32";
             this.value32.Size = new System.Drawing.Size(50, 26);
             this.value32.TabIndex = 31;
+            this.value32.ValueChanged += new System.EventHandler(this.EEPM7_Change);
             // 
             // label26
             // 
@@ -2062,13 +2091,14 @@ namespace serialport
             this.value33.Font = new System.Drawing.Font("宋体", 12F);
             this.value33.Location = new System.Drawing.Point(291, 407);
             this.value33.Maximum = new decimal(new int[] {
-            255,
+            127,
             0,
             0,
             0});
             this.value33.Name = "value33";
             this.value33.Size = new System.Drawing.Size(50, 26);
             this.value33.TabIndex = 32;
+            this.value33.ValueChanged += new System.EventHandler(this.EEPM8_Change);
             // 
             // label27
             // 
@@ -2092,6 +2122,7 @@ namespace serialport
             this.value34.Name = "value34";
             this.value34.Size = new System.Drawing.Size(50, 26);
             this.value34.TabIndex = 33;
+            this.value34.ValueChanged += new System.EventHandler(this.EEPM9_Change);
             // 
             // label28
             // 
@@ -2115,6 +2146,7 @@ namespace serialport
             this.value35.Name = "value35";
             this.value35.Size = new System.Drawing.Size(50, 26);
             this.value35.TabIndex = 34;
+            this.value35.ValueChanged += new System.EventHandler(this.EEPM10_Change);
             // 
             // label29
             // 
@@ -2138,6 +2170,7 @@ namespace serialport
             this.value37.Name = "value37";
             this.value37.Size = new System.Drawing.Size(50, 26);
             this.value37.TabIndex = 36;
+            this.value37.ValueChanged += new System.EventHandler(this.EEPM12_14_Change);
             // 
             // label30
             // 
@@ -2161,6 +2194,7 @@ namespace serialport
             this.value38.Name = "value38";
             this.value38.Size = new System.Drawing.Size(50, 26);
             this.value38.TabIndex = 37;
+            this.value38.ValueChanged += new System.EventHandler(this.EEPM12_14_Change);
             // 
             // label31
             // 
@@ -2174,6 +2208,7 @@ namespace serialport
             // 
             // value40
             // 
+            this.value40.Enabled = false;
             this.value40.Font = new System.Drawing.Font("宋体", 12F);
             this.value40.Location = new System.Drawing.Point(1130, 407);
             this.value40.Maximum = new decimal(new int[] {
@@ -2207,6 +2242,7 @@ namespace serialport
             this.value36.Name = "value36";
             this.value36.Size = new System.Drawing.Size(50, 26);
             this.value36.TabIndex = 35;
+            this.value36.ValueChanged += new System.EventHandler(this.EEPM11_Change);
             // 
             // label20
             // 
@@ -2230,6 +2266,7 @@ namespace serialport
             this.value39.Name = "value39";
             this.value39.Size = new System.Drawing.Size(50, 26);
             this.value39.TabIndex = 38;
+            this.value39.ValueChanged += new System.EventHandler(this.EEPM12_14_Change);
             // 
             // label19
             // 

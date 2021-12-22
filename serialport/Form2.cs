@@ -20,12 +20,11 @@ namespace serialport
         static double RREF = 8.431;
         static double IFULL = 74.999407;
 
-        private static string[] EEPaddress = new string[40] { "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139",
+        public static string[] EEPaddress = new string[40] { "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139",
                                                               "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171",
                                                               "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203",
                                                               "204", "205", "206", "207"};
-        private static string[] EEPvalue = new string[45];
-
+        public static string[] EEPvalue = new string[45];
         private static int[] EEPcombobox = new int[60];
                                                                                                                                         
 
@@ -182,10 +181,7 @@ namespace serialport
                 if (Input_CSV(this.path.Text))
                 {
                     CRC_Check();
-                    FS0_Change_CB();
-                    FS1_Change_CB();
-                    Diagnostic_Change_CB();
-                    EEPM6_Change_CB();
+                    Data_Refresh();
 
                     MessageBox.Show("导入完成");
                     flag=false;
@@ -261,6 +257,10 @@ namespace serialport
          * Input & Output Function Over
          * ***********************************************************************************************/
 
+
+        /**************************************************************************************************
+         * I_FULL & Data Refresh Begin
+         * ***********************************************************************************************/
         private void RREF_Change(object sender, EventArgs e)
         {
             flag = false;
@@ -301,10 +301,13 @@ namespace serialport
             tb.Text = ((float)(nud.Value / nud.Maximum * 100)).ToString("#0.0");
             CRC_Check();
         }
+        /**************************************************************************************************
+         * I_FULL & Data Refresh Begin
+         * ***********************************************************************************************/
 
-        /********************************************************************************************************************************
+        /**************************************************************************************************
         * FS0 ComboBox & NumericUpDown Begin
-        ********************************************************************************************************************************/
+        **************************************************************************************************/
         private void FS0_Change(object sender, EventArgs e)
         {
             FS0_Change_CB();
@@ -478,6 +481,7 @@ namespace serialport
         * Diagnostic ComboBox & NumericUpDown  Over
         ********************************************************************************************************************************/
 
+
         /********************************************************************************************************************************
         * EEPM6 Change  Begin
         ********************************************************************************************************************************/
@@ -514,6 +518,254 @@ namespace serialport
         * EEPM6 Change  Over
         ********************************************************************************************************************************/
 
+
+        /********************************************************************************************************************************
+        * EEPM7 Change  Begin
+        ********************************************************************************************************************************/
+        private void EEPM7_Change(object sender, EventArgs e)
+        {
+            EEPM7_Change_CB();
+            CRC_Check();
+        }
+        private void EEPM7_CB_Change(object sender, EventArgs e)
+        {
+            int bit0_1, bit2, bit3, bit4_7;
+
+            if (this.comboBox43.SelectedIndex == -1)
+                bit0_1 = 0;
+            else
+                bit0_1 = this.comboBox43.SelectedIndex;
+
+            bit2 = this.comboBox42.Text == "One Fail All Fail" ? 1 : 0;
+            bit3 = this.comboBox41.Text == "Enable" ? 1 : 0;
+
+            if (this.comboBox40.SelectedIndex == -1)
+                bit4_7 = 0;
+            else
+                bit4_7 = this.comboBox40.SelectedIndex;
+
+            this.value32.Value = bit4_7 << 4 | bit3 << 3 | bit2 << 2 | bit0_1;
+
+            ComboBox cb = sender as ComboBox;
+            if (cb.Name == "comboBox43")
+            {
+                if (this.comboBox43.Text != String.Empty && this.Rref.Text != String.Empty)
+                {
+                    RREF = Convert.ToDouble(Rref.Text);
+                    IFULL = 1.235 / Convert.ToDouble(Rref.Text) * Convert.ToDouble(comboBox43.Text);
+                    I_Full.Text = IFULL.ToString("0.000000");
+                }
+            }
+        }
+
+        private void EEPM7_Change_CB()
+        {
+            byte temp;
+            temp = Convert.ToByte(this.value32.Value);
+
+            this.comboBox40.SelectedIndex = (temp & 0xf0) >> 4;
+            this.comboBox41.SelectedIndex = (temp & 8) == 8 ? 0 : 1;
+            this.comboBox42.SelectedIndex = (temp & 4) == 4 ? 0 : 1;
+            this.comboBox43.SelectedIndex = temp & 3;
+        }
+        /********************************************************************************************************************************
+        * EEPM7 Change  Over
+        ********************************************************************************************************************************/
+
+
+        /********************************************************************************************************************************
+        * EEPM8 Change  Begin
+        ********************************************************************************************************************************/
+        private void EEPM8_Change(object sender, EventArgs e)
+        {
+            EEPM8_Change_CB();
+            CRC_Check();
+        }
+        private void EEPM8_CB_Change(object sender, EventArgs e)
+        {
+            int bit0_3, bit4_6;
+
+            if (this.comboBox45.SelectedIndex == -1)
+                bit0_3 = 0;
+            else
+                bit0_3 = this.comboBox45.SelectedIndex;
+
+            if (this.comboBox44.SelectedIndex == -1)
+                bit4_6 = 0;
+            else
+                bit4_6 = this.comboBox44.SelectedIndex;
+
+            this.value33.Value = bit4_6 << 4 | bit0_3;
+        }
+
+        private void EEPM8_Change_CB()
+        {
+            byte temp;
+            temp = Convert.ToByte(this.value33.Value);
+
+            this.comboBox44.SelectedIndex = (temp & 0x70) >> 4;
+            this.comboBox45.SelectedIndex = temp & 15;
+        }
+        /********************************************************************************************************************************
+        * EEPM8 Change  Over
+        ********************************************************************************************************************************/
+
+
+        /********************************************************************************************************************************
+        * EEPM9 Change  Begin
+        ********************************************************************************************************************************/
+        private void EEPM9_Change(object sender, EventArgs e)
+        {
+            EEPM9_Change_CB();
+            CRC_Check();
+        }
+        private void EEPM9_CB_Change(object sender, EventArgs e)
+        {
+            int bit0_3, bit4_7;
+
+            if (this.comboBox47.SelectedIndex == -1)
+                bit0_3 = 0;
+            else
+                bit0_3 = this.comboBox47.SelectedIndex;
+
+            if (this.comboBox46.SelectedIndex == -1)
+                bit4_7 = 0;
+            else
+                bit4_7 = this.comboBox46.SelectedIndex;
+
+            this.value34.Value = bit4_7 << 4 | bit0_3;
+        }
+
+        private void EEPM9_Change_CB()
+        {
+            byte temp;
+            temp = Convert.ToByte(this.value34.Value);
+
+            this.comboBox46.SelectedIndex = (temp & 0xF0) >> 4;
+            this.comboBox47.SelectedIndex = temp & 15;
+        }
+        /********************************************************************************************************************************
+        * EEPM9 Change  Over
+        ********************************************************************************************************************************/
+
+
+        /********************************************************************************************************************************
+        * EEPM10 Change  Begin
+        ********************************************************************************************************************************/
+        private void EEPM10_Change(object sender, EventArgs e)
+        {
+            EEPM10_Change_CB();
+            CRC_Check();
+        }
+        private void EEPM10_CB_Change(object sender, EventArgs e)
+        {
+            int bit0_3, bit4_7;
+
+            if (this.comboBox49.SelectedIndex == -1)
+                bit0_3 = 0;
+            else
+                bit0_3 = this.comboBox49.SelectedIndex;
+
+            if (this.comboBox48.SelectedIndex == -1)
+                bit4_7 = 0;
+            else
+                bit4_7 = this.comboBox48.SelectedIndex;
+
+            this.value35.Value = bit4_7 << 4 | bit0_3;
+        }
+
+        private void EEPM10_Change_CB()
+        {
+            byte temp;
+            temp = Convert.ToByte(this.value35.Value);
+
+            this.comboBox48.SelectedIndex = (temp & 0xF0) >> 4;
+            this.comboBox49.SelectedIndex = temp & 15;
+        }
+        /********************************************************************************************************************************
+        * EEPM10 Change  Over
+        ********************************************************************************************************************************/
+
+
+        /********************************************************************************************************************************
+        * EEPM11 Change  Begin
+        ********************************************************************************************************************************/
+        private void EEPM11_Change(object sender, EventArgs e)
+        {
+            EEPM11_Change_CB();
+            CRC_Check();
+        }
+        private void EEPM11_CB_Change(object sender, EventArgs e)
+        {
+            int bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7;
+            ComboBox CB = sender as ComboBox;
+
+            if (CB.Text == "1")
+                CB.ForeColor = Color.ForestGreen;
+            else
+                CB.ForeColor = Color.Red;
+
+            bit0 = this.comboBox54.Text == "1" ? 1 : 0;
+            bit1 = this.comboBox55.Text == "1" ? 1 : 0;
+            bit2 = this.comboBox56.Text == "1" ? 1 : 0;
+            bit3 = this.comboBox57.Text == "1" ? 1 : 0;
+            bit4 = this.comboBox50.Text == "1" ? 1 : 0;
+            bit5 = this.comboBox51.Text == "1" ? 1 : 0;
+            bit6 = this.comboBox52.Text == "1" ? 1 : 0;
+            bit7 = this.comboBox53.Text == "1" ? 1 : 0;
+
+            this.value36.Value = bit7 << 7 | bit6 << 6 | bit5 << 5 | bit4 << 4 | bit3 << 3 | bit2 << 2 | bit1 << 1 | bit0;
+        }
+
+        private void EEPM11_Change_CB()
+        {
+            byte temp;
+            temp = Convert.ToByte(this.value36.Value);
+
+            this.comboBox54.SelectedIndex = (temp & 1) == 1 ? 1 : 0;
+            this.comboBox55.SelectedIndex = (temp & 2) == 2 ? 1 : 0;
+            this.comboBox56.SelectedIndex = (temp & 4) == 4 ? 1 : 0;
+            this.comboBox57.SelectedIndex = (temp & 8) == 8 ? 1 : 0;
+            this.comboBox50.SelectedIndex = (temp & 16) == 16 ? 1 : 0;
+            this.comboBox51.SelectedIndex = (temp & 32) == 32 ? 1 : 0;
+            this.comboBox52.SelectedIndex = (temp & 64) == 64 ? 1 : 0;
+            this.comboBox53.SelectedIndex = (temp & 128) == 128 ? 1 : 0;
+        }
+        /********************************************************************************************************************************
+        * EEPM11 Change  Over
+        ********************************************************************************************************************************/
+
+
+        /********************************************************************************************************************************
+        * EEPM12_14 Change  Begin
+        ********************************************************************************************************************************/
+        private void EEPM12_14_Change(object sender, EventArgs e)
+        {
+            CRC_Check();
+        }
+        /********************************************************************************************************************************
+        * EEPM12_14 Change  Over
+        ********************************************************************************************************************************/
+
+
+        /********************************************************************************************************************************
+         * Data Refresh Begin
+         * *****************************************************************************************************************************/
+        private void Data_Refresh()
+        {
+            FS0_Change_CB();
+            FS1_Change_CB();
+            Diagnostic_Change_CB();
+            EEPM6_Change_CB();
+            EEPM7_Change_CB();
+            EEPM8_Change_CB();
+            EEPM9_Change_CB();
+            EEPM10_Change_CB();
+            EEPM11_Change_CB();
+        }
+        /********************************************************************************************************************************
+         * Data Refresh Over
+         * *****************************************************************************************************************************/
     }
 
 }
