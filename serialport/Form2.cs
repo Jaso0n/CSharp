@@ -19,6 +19,8 @@ namespace serialport
         static bool flag = true;
         static double RREF = 8.431;
         static double IFULL = 74.999407;
+        string EEPValue = String.Empty;
+        private Form1 fm1;
 
         public static string[] EEPaddress = new string[40] { "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139",
                                                               "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171",
@@ -101,6 +103,13 @@ namespace serialport
             InitializeComponent();
         }
 
+        public Form2(Form1 f)
+        {
+            InitializeComponent();
+            fm1 = f;
+        }
+
+
         private void Form2_Load(object sender, EventArgs e)
         {
             if (!flag)
@@ -135,6 +144,7 @@ namespace serialport
                 {
                     NumericUpDown nud = (NumericUpDown)this.panel2.Controls["Value" + i.ToString()];
                     EEPvalue[i] = nud.Value.ToString();
+                    EEPValue += EEPaddress[i - 1] + EEPvalue[i] + " ";
                 }
 
                 for (int i = 1;i < 58; i++)
@@ -144,6 +154,9 @@ namespace serialport
                 }
             }
             this.Close();
+
+            fm1.textBox2.Clear();
+            fm1.textBox2.Text = EEPValue;
         }
 
         private void Cancel_Click(object sender, EventArgs e)

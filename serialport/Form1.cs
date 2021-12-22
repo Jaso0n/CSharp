@@ -36,8 +36,7 @@ namespace serialport
             button2.BackColor = Color.ForestGreen;
         }
 
-        private void Button1_Click(object sender, EventArgs e)//打开串口
-        //串口初始化
+        private void Button1_Click(object sender, EventArgs e)//串口初始化
         {
             try
             {
@@ -53,7 +52,6 @@ namespace serialport
                     comboBox3.Enabled = true;
                     comboBox4.Enabled = true;
                     comboBox5.Enabled = true;
-
                 }
                 else
                 {
@@ -74,6 +72,7 @@ namespace serialport
                         serialPort1.StopBits = System.IO.Ports.StopBits.OnePointFive;
                     else if (comboBox5.Text.Equals("2"))
                         serialPort1.StopBits = System.IO.Ports.StopBits.Two;
+                    
                     serialPort1.Open();
                     label7.Text = "串口已打开";
                     label7.ForeColor = Color.Green;
@@ -279,7 +278,7 @@ namespace serialport
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            new Form2().ShowDialog();
+            new Form2(this).ShowDialog();
         }
 
         private void Label10_Click(object sender, EventArgs e)
@@ -290,6 +289,8 @@ namespace serialport
         private void CheckBox6_CheckedChanged(object sender, EventArgs e)
         {
             this.button6.Enabled = checkBox6.Checked;
+            this.checkBox2.Checked = true;
+            this.checkBox3.Checked = true;
         }
 
     }

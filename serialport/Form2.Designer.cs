@@ -3084,6 +3084,7 @@ namespace serialport
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.sure);
             this.Controls.Add(this.panel2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form2";
             this.Text = "参数设定";
