@@ -253,6 +253,7 @@ namespace serialport
             this.path2 = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.comboBox58 = new System.Windows.Forms.ComboBox();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.value25)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.value30)).BeginInit();
@@ -3060,6 +3061,7 @@ namespace serialport
             this.checkBox1.TabIndex = 7;
             this.checkBox1.Text = "单地址刷写";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // checkBox2
             // 
@@ -3071,10 +3073,38 @@ namespace serialport
             this.checkBox2.TabIndex = 8;
             this.checkBox2.Text = "遍历刷写";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // comboBox58
+            // 
+            this.comboBox58.Enabled = false;
+            this.comboBox58.FormattingEnabled = true;
+            this.comboBox58.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15"});
+            this.comboBox58.Location = new System.Drawing.Point(833, 642);
+            this.comboBox58.Name = "comboBox58";
+            this.comboBox58.Size = new System.Drawing.Size(121, 20);
+            this.comboBox58.TabIndex = 9;
             // 
             // Form2
             // 
             this.ClientSize = new System.Drawing.Size(1211, 713);
+            this.Controls.Add(this.comboBox58);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.path2);
@@ -3362,5 +3392,6 @@ namespace serialport
         private System.Windows.Forms.TextBox Rref;
         private System.Windows.Forms.TextBox I_Full;
         private System.Windows.Forms.Label label115;
+        private System.Windows.Forms.ComboBox comboBox58;
     }
 }

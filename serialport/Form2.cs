@@ -21,6 +21,7 @@ namespace serialport
         static double IFULL = 74.999407;
         string EEPValue = String.Empty;
         private Form1 fm1;
+        static bool singeladdr = true;
 
         public static string[] EEPaddress = new string[40] { "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139",
                                                               "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171",
@@ -126,12 +127,14 @@ namespace serialport
                 }
             }
 
+           
             CRC_Check();
             this.path.Text = path_input;
             this.path2.Text = path_output;
 
             this.Rref.Text = RREF.ToString();
-            this.I_Full.Text =  IFULL.ToString();
+            this.I_Full.Text =  IFULL.ToString(); 
+            this.checkBox1.Checked = singeladdr;
         }
         /***************************************************************************************************
          * Sure & Cancel Button Begin
@@ -777,8 +780,26 @@ namespace serialport
             EEPM11_Change_CB();
         }
         /********************************************************************************************************************************
-         * Data Refresh Over
-         * *****************************************************************************************************************************/
+        * Data Refresh Over
+        * *****************************************************************************************************************************/
+
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBox58.Enabled = checkBox1.Checked;
+            if(checkBox1.Checked)
+            {
+                checkBox2.Checked = false;
+            }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox2.Checked)
+            {
+                checkBox1.Checked = false;
+            }
+        }
     }
 
 }
