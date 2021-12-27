@@ -19,20 +19,21 @@ namespace serialport
         static bool flag = true;
         static double RREF = 8.431;
         static double IFULL = 74.999407;
-        string EEPValue = String.Empty;
-        private Form1 fm1;
-        static bool singeladdr = true;
+        public static byte addr;
 
-        public static string[] EEPaddress = new string[40] { "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139",
+        private Form1 fm1;
+        private static bool singeladdr = true;
+        public static bool singel_or_multi = true;
+
+        private static string[] EEPaddress = new string[40] { "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139",
                                                               "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171",
                                                               "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203",
                                                               "204", "205", "206", "207"};
-        public static string[] EEPvalue = new string[45];
-        private static int[] EEPcombobox = new int[60];
-                                                                                                                                        
+        private static string[] EEPvalue = new string[45];
+        public static Byte[,] EEPToSend = new Byte[40, 5];
 
         /****************************************************************************************************************
-         * CRC Calculation Begin
+         * CRC Calculation Begin @ShuGuang
          * *************************************************************************************************************/
         private static byte crr_calculation(byte crc_init, byte input_data)
         {
@@ -110,7 +111,6 @@ namespace serialport
             fm1 = f;
         }
 
-
         private void Form2_Load(object sender, EventArgs e)
         {
             if (!flag)
@@ -120,20 +120,16 @@ namespace serialport
                     NumericUpDown nud = (NumericUpDown)this.panel2.Controls["Value" + i.ToString()];
                     nud.Value = Convert.ToInt16(EEPvalue[i]);
                 }
-                for (int i = 1; i < 58; i++)
-                {
-                    ComboBox cb = (ComboBox)this.panel2.Controls["comboBox" + i.ToString()];
-                    cb.SelectedIndex = EEPcombobox[i];
-                }
+                Data_Refresh();
             }
 
-           
+
             CRC_Check();
             this.path.Text = path_input;
             this.path2.Text = path_output;
 
             this.Rref.Text = RREF.ToString();
-            this.I_Full.Text =  IFULL.ToString(); 
+            this.I_Full.Text = IFULL.ToString();
             this.checkBox1.Checked = singeladdr;
         }
         /***************************************************************************************************
@@ -141,25 +137,16 @@ namespace serialport
          *************************************************************************************************/
         private void Sure_Click(object sender, EventArgs e)
         {
-            if(!flag)
+            if (!flag)
             {
                 for (int i = 1; i < 41; i++)
                 {
                     NumericUpDown nud = (NumericUpDown)this.panel2.Controls["Value" + i.ToString()];
                     EEPvalue[i] = nud.Value.ToString();
-                    EEPValue += EEPaddress[i - 1] + EEPvalue[i] + " ";
-                }
-
-                for (int i = 1;i < 58; i++)
-                {
-                    ComboBox cb = (ComboBox)this.panel2.Controls["comboBox" + i.ToString()];
-                    EEPcombobox[i] = cb.SelectedIndex;
+                    //EEPValue += EEPaddress[i - 1] + EEPvalue[i] + " ";
                 }
             }
             this.Close();
-
-            fm1.textBox2.Clear();
-            fm1.textBox2.Text = EEPValue;
         }
 
         private void Cancel_Click(object sender, EventArgs e)
@@ -176,9 +163,9 @@ namespace serialport
          * ***********************************************************************************************/
         private void Output_Click(object sender, EventArgs e)
         {
-            if(this.path2.Text != string.Empty)
+            if (this.path2.Text != string.Empty)
             {
-                if(Save_CSV(this.path2.Text))
+                if (Save_CSV(this.path2.Text))
                 {
                     MessageBox.Show("导出完成");
                     flag = false;
@@ -200,7 +187,7 @@ namespace serialport
                     Data_Refresh();
 
                     MessageBox.Show("导入完成");
-                    flag=false;
+                    flag = false;
                 }
             }
             else
@@ -230,17 +217,17 @@ namespace serialport
 
         private bool Save_CSV(string filePath)
         {
-            FileStream fs = new FileStream(filePath, FileMode.Create,FileAccess.Write);
+            FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs);
 
-            string col_txt = "ADDRESS" + ","+ "VALUE";
+            string col_txt = "ADDRESS" + "," + "VALUE";
             sw.WriteLine(col_txt);
 
             for (int i = 1; i < 41; i++)
             {
                 string row_txt;
                 NumericUpDown nud = (NumericUpDown)this.panel2.Controls["Value" + i.ToString()];
-                row_txt = EEPaddress[i-1] + "," + nud.Value.ToString();
+                row_txt = EEPaddress[i - 1] + "," + nud.Value.ToString();
                 sw.WriteLine(row_txt);
             }
             sw.Flush();
@@ -510,7 +497,7 @@ namespace serialport
         {
             int bit0_3, bit4, bit6;
 
-            if(this.comboBox39.SelectedIndex == -1)
+            if (this.comboBox39.SelectedIndex == -1)
                 bit0_3 = 0;
             else
                 bit0_3 = this.comboBox39.SelectedIndex;
@@ -787,19 +774,295 @@ namespace serialport
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             comboBox58.Enabled = checkBox1.Checked;
-            if(checkBox1.Checked)
+            if (checkBox1.Checked)
             {
                 checkBox2.Checked = false;
+                singel_or_multi = true;
             }
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            if(checkBox2.Checked)
+            if (checkBox2.Checked)
             {
                 checkBox1.Checked = false;
+                singel_or_multi = false;
             }
         }
+
+        /****************************************************************************
+         * TPS Frame Begin  @ShuGuang
+         * ************************************************************************/
+        enum cmd_len_t
+        {
+            Single_1byte = 0,
+            Burst_2byte = 1,
+            Burst_4byte = 2,
+            Burst_8byte = 3,
+        };
+
+        /* 生成DEV_ADDR结构 */
+        static byte tps_dev_get(byte addr, cmd_len_t len, byte broascast, byte readwrite)
+        {
+            byte tps_dev;
+
+            tps_dev = (byte)((addr & 0x0f) | ((broascast & 0x01) << 6) | ((readwrite & 0x01) << 7));
+
+            switch (len)
+            {
+                case cmd_len_t.Single_1byte: tps_dev |= (0 << 4); break;
+                case cmd_len_t.Burst_2byte: tps_dev |= (1 << 4); break;
+                case cmd_len_t.Burst_4byte: tps_dev |= (2 << 4); break;
+                case cmd_len_t.Burst_8byte: tps_dev |= (3 << 4); break;
+            }
+
+            return tps_dev;
+        }
+
+        /* 写1个字节 */
+        public static byte tps_write_1byte(byte addr, byte reg, byte data, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Single_1byte, 0, 1);
+            buf[2] = reg;
+            buf[3] = data;
+
+            for (int i = 0; i < 4; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 3);
+            buf[4] = v;
+
+            return 5;
+        }
+
+        public static byte TPS_Frame(int i, byte addr, ref byte[] buf)
+        {
+            byte len = tps_write_1byte(addr, Convert.ToByte(EEPaddress[i]), Convert.ToByte(EEPvalue[i + 1]), ref buf);
+            return len;
+        }
+
+        private void comboBox58_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            addr = Convert.ToByte(comboBox58.Text);
+        }
+#if false
+
+        /* 写2个字节 */
+        static byte tps_write_2byte(byte addr, byte reg, byte[] data, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Burst_2byte, 0, 1);
+            buf[2] = reg;
+            buf[3] = data[0];
+            buf[4] = data[1];
+
+            for (int i = 0; i < 5; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 4);
+            buf[5] = v;
+
+            return 6;
+        }
+        /* 写4个字节 */
+        static byte tps_write_4byte(byte addr, byte reg, byte[] data, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Burst_4byte, 0, 1);
+            buf[2] = reg;
+            buf[3] = data[0];
+            buf[4] = data[1];
+            buf[5] = data[2];
+            buf[6] = data[3];
+
+            for (int i = 0; i < 7; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 6);
+            buf[7] = v;
+
+            return 8;
+        }
+
+        /* 写8个字节 */
+        static byte tps_write_8byte(byte addr, byte reg, byte[] data, ref byte[] buf)
+        {
+            byte[] temp = new byte[15];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Burst_8byte, 0, 1);
+            buf[2] = reg;
+            buf[3] = data[0];
+            buf[4] = data[1];
+            buf[5] = data[2];
+            buf[6] = data[3];
+            buf[7] = data[4];
+            buf[8] = data[5];
+            buf[9] = data[6];
+            buf[10] = data[7];
+
+            for (int i = 0; i < 11; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 10);
+            buf[11] = v;
+
+            return 12;
+        }
+
+        /* 广播写1个字节 */
+        static byte tps_write_1byte_broadcast(byte reg, byte data, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(0, cmd_len_t.Single_1byte, 1, 1);
+            buf[2] = reg;
+            buf[3] = data;
+
+            for (int i = 0; i < 4; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 3);
+            buf[4] = v;
+
+            return 5;
+        }
+        /* 广播写2个字节 */
+        static byte tps_write_2byte_broadcast(byte reg, byte[] data, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(0, cmd_len_t.Burst_2byte, 1, 1);
+            buf[2] = reg;
+            buf[3] = data[0];
+            buf[4] = data[1];
+
+            for (int i = 0; i < 5; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 4);
+            buf[5] = v;
+
+            return 6;
+        }
+        /* 广播写4个字节 */
+        static byte tps_write_4byte_broadcast(byte reg, byte[] data, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(0, cmd_len_t.Burst_4byte, 1, 1);
+            buf[2] = reg;
+            buf[3] = data[0];
+            buf[4] = data[1];
+            buf[5] = data[2];
+            buf[6] = data[3];
+
+            for (int i = 0; i < 7; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 6);
+            buf[7] = v;
+
+            return 8;
+        }
+        /* 广播写8个字节 */
+        static byte tps_write_8byte_broadcast(byte reg, byte[] data, ref byte[] buf)
+        {
+            byte[] temp = new byte[15];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(0, cmd_len_t.Burst_8byte, 1, 1);
+            buf[2] = reg;
+            buf[3] = data[0];
+            buf[4] = data[1];
+            buf[5] = data[2];
+            buf[6] = data[3];
+            buf[7] = data[4];
+            buf[8] = data[5];
+            buf[9] = data[6];
+            buf[10] = data[7];
+
+            for (int i = 0; i < 11; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 10);
+            buf[11] = v;
+
+            return 12;
+        }
+
+        /* 读1个字节 */
+        static byte tps_read_1byte(byte addr, byte reg, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Single_1byte, 0, 0);
+            buf[2] = reg;
+
+            for (int i = 0; i < 3; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 3);
+            buf[3] = v;
+
+            return 4;
+        }
+
+        /* 读2个字节 */
+        static byte tps_read_2byte(byte addr, byte reg, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Burst_2byte, 0, 0);
+            buf[2] = reg;
+
+            for (int i = 0; i < 3; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 3);
+            buf[3] = v;
+
+            return 4;
+        }
+        /* 读4个字节 */
+        static byte tps_read_4byte(byte addr, byte reg, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Burst_4byte, 0, 0);
+            buf[2] = reg;
+
+            for (int i = 0; i < 3; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 3);
+            buf[3] = v;
+
+            return 4;
+        }
+        /* 读8个字节 */
+        static byte tps_read_8byte(byte addr, byte reg, ref byte[] buf)
+        {
+            byte[] temp = new byte[10];
+            buf[0] = 0x55;
+            buf[1] = tps_dev_get(addr, cmd_len_t.Burst_8byte, 0, 0);
+            buf[2] = reg;
+
+            for (int i = 0; i < 3; i++)
+                temp[i] = buf[i + 1];
+
+            byte v = CRC(temp, 3);
+            buf[3] = v;
+
+            return 4;
+        }
+
+#endif
+        /****************************************************************************
+         * TPS Frame Over
+         * ************************************************************************/
     }
 
 }

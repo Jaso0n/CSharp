@@ -3100,6 +3100,7 @@ namespace serialport
             this.comboBox58.Name = "comboBox58";
             this.comboBox58.Size = new System.Drawing.Size(121, 20);
             this.comboBox58.TabIndex = 9;
+            this.comboBox58.SelectedIndexChanged += new System.EventHandler(this.comboBox58_SelectedIndexChanged);
             // 
             // Form2
             // 
@@ -3392,6 +3393,6 @@ namespace serialport
         private System.Windows.Forms.TextBox Rref;
         private System.Windows.Forms.TextBox I_Full;
         private System.Windows.Forms.Label label115;
-        private System.Windows.Forms.ComboBox comboBox58;
+        public System.Windows.Forms.ComboBox comboBox58;
     }
 }
