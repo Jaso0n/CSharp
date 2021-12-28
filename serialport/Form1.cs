@@ -29,7 +29,7 @@ namespace serialport
             comboBox1.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
             //串口默认设置
             comboBox1.Text = "COM1";
-            comboBox2.Text = "115200";
+            comboBox2.Text = "500000";
             comboBox3.Text = "8";
             comboBox4.Text = "None";
             comboBox5.Text = "1";
@@ -194,7 +194,7 @@ namespace serialport
             {
                 if (serialPort1.IsOpen)
                 {
-                    //TPS_UnLock(); //TPS解锁
+                    TPS_UnLock();
                     if (Form2.singel_or_multi == false)
                     {
 
@@ -213,9 +213,12 @@ namespace serialport
                             SDNumb += len;
                         }
                     }
-                    //TPS_Lock(); //TPS加锁
+                    TPS_Lock();
                 }
                 label8.Text = "TX:" + SDNumb.ToString() + "Bytes";
+
+                byte length = Form2.tps_read_1byte(Form2.addr, 0x71, ref buf);
+                serialPort1.Write(buf, 0, length);
             }
             catch (Exception ex)
             {
@@ -246,13 +249,13 @@ namespace serialport
                 RENumb += RecvNum;
                 label9.Text = "RX:" + RENumb.ToString() + "Bytes";
 
-                for (int i = 1; i < RecvNum + 1; i++)
+                for (int i = 0; i < RecvNum; i++)
                 {
-                    textBox1.AppendText(RecvBuff[i - 1].ToString("X2") + " ");
-                    if (i % 5 == 0)
+                    if (RecvBuff[i] == 0x55)
                     {
                         textBox1.AppendText("\r\n");
                     }
+                    textBox1.AppendText(RecvBuff[i].ToString("X2") + " ");
                 }
             }
             else
@@ -372,5 +375,69 @@ namespace serialport
             this.checkBox3.Enabled = !checkBox6.Checked;
         }
 
+        private void TPS_UnLock()
+        {
+            //CLR_REG        0x60 bit4
+            //LOCK           0x61 bit4
+            //CONF_EEPGATE   0x65
+            //CONF_EEPMODE   0x63 bit0
+            //CONF_STAYINEEP 0x62 bit7
+            //CONF_EEPPROG   0x64 bit2
+            byte len = Form2.tps_write_1byte(Form2.addr, 0x61, 0x00, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x60, 0x07, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x65, 0x00, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x65, 0x02, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x65, 0x01, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x65, 0x09, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x65, 0x02, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x65, 0x09, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x63, 0x01, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x62, 0x80, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(10);
+        }
+
+
+        private void TPS_Lock()
+        {
+            //LOCK           0x61
+            //CONF_EEPGATE   0x65
+            //CONF_EEPMODE   0x63 bit0
+            //CONF_STAYINEEP 0x62 bit7
+            //CONF_EEPPROG   0x64 bit2
+            byte len = Form2.tps_write_1byte(Form2.addr, 0x64, 0x04, ref buf);
+            serialPort1.Write(buf, 0, len);
+            System.Threading.Thread.Sleep(200);
+
+            len = Form2.tps_write_1byte(Form2.addr, 0x62, 0x00, ref buf);
+            serialPort1.Write(buf, 0, len);
+        }
     }
 }

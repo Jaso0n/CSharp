@@ -847,6 +847,7 @@ namespace serialport
         {
             addr = Convert.ToByte(comboBox58.Text);
         }
+
 #if false
 
         /* 写2个字节 */
@@ -992,9 +993,10 @@ namespace serialport
 
             return 12;
         }
+#endif
 
         /* 读1个字节 */
-        static byte tps_read_1byte(byte addr, byte reg, ref byte[] buf)
+        public static byte tps_read_1byte(byte addr, byte reg, ref byte[] buf)
         {
             byte[] temp = new byte[10];
             buf[0] = 0x55;
@@ -1004,12 +1006,13 @@ namespace serialport
             for (int i = 0; i < 3; i++)
                 temp[i] = buf[i + 1];
 
-            byte v = CRC(temp, 3);
+            byte v = CRC(temp, 2);
             buf[3] = v;
 
             return 4;
         }
 
+#if false
         /* 读2个字节 */
         static byte tps_read_2byte(byte addr, byte reg, ref byte[] buf)
         {
